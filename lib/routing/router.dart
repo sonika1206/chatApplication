@@ -1,6 +1,7 @@
 import 'package:chat2/auth/logic/auth_provider.dart';
 import 'package:chat2/auth/ui/login_page.dart';
 import 'package:chat2/auth/ui/signup_page.dart';
+import 'package:chat2/chat/model/chat_model.dart';
 import 'package:chat2/chat/ui/chat_page.dart';
 import 'package:chat2/chat/ui/widgets/navigation.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +15,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final user = await ref.read(currentUserProvider.future);
       final path = state.fullPath ?? '/';
 
-      // If user is not authenticated, redirect to login unless already on login or signup
       if (user == null && path != '/login' && path != '/signup') {
         return '/login';
       }
-
-      // If user is authenticated, redirect to /chats unless already on /chats or /chat/:chatId
       if (user != null && path != '/chat' && !path.startsWith('/chat/')) {
         return '/chat';
       }

@@ -67,7 +67,7 @@ class AddChatPage extends ConsumerWidget {
                                 ref.invalidate(userChatsProvider(userId));
                                 await Future.delayed(Duration.zero);
                                 if (context.mounted) {
-                                  context.go('/main/chat/$chatId');
+                                  context.go('/chat/$chatId');
                                 }
                               } catch (e) {
                                 if (context.mounted) {

@@ -6,6 +6,7 @@ part 'chat_model.g.dart';
 @JsonSerializable()
 class Chat {
   final String? id;
+  @JsonKey(name:"chat_type")
   final String? chatType;
   @JsonKey(name: 'name')
   final String? name;
@@ -23,3 +24,4 @@ class Chat {
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
   Map<String, dynamic> toJson() => _$ChatToJson(this);
 }
+

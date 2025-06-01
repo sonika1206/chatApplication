@@ -8,7 +8,7 @@ part of 'chat_model.dart';
 
 Chat _$ChatFromJson(Map<String, dynamic> json) => Chat(
   id: json['id'] as String?,
-  chatType: json['chatType'] as String?,
+  chatType: json['chat_type'] as String?,
   name: json['name'] as String?,
   participantIds: (json['participantIds'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -20,7 +20,7 @@ Chat _$ChatFromJson(Map<String, dynamic> json) => Chat(
 
 Map<String, dynamic> _$ChatToJson(Chat instance) => <String, dynamic>{
   'id': instance.id,
-  'chatType': instance.chatType,
+  'chat_type': instance.chatType,
   'name': instance.name,
   'participantIds': instance.participantIds,
   'lastMessage': instance.lastMessage,

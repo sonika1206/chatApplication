@@ -3,6 +3,7 @@ import 'package:chat2/chat/ui/widgets/app_bar.dart';
 import 'package:chat2/chat/ui/widgets/progile_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -12,8 +13,27 @@ class ProfilePage extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white, // Set background color to white
-      appBar: const GradientAppBar(title: 'Profile'),
+      backgroundColor: Colors.white, 
+      appBar: GradientAppBar(title: 'Profile', actions: [ IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              try {
+                await ref.read(authServiceProviderProvider).signOut();
+                ref.invalidate(currentUserProvider);
+                await Future.delayed(Duration.zero);
+                if (context.mounted) context.go('/login');
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error signing out: $e'),
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  );
+                }
+              }
+            },
+          ),],),
       body: userAsync.when(
         data: (user) => user == null
             ? const Center(child: Text('Please log in'))

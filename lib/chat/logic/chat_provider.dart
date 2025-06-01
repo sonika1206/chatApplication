@@ -3,6 +3,7 @@ import 'package:chat2/chat/model/chat_model.dart';
 import 'package:chat2/chat/model/message_model.dart';
 import 'package:chat2/chat/model/user_details.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'chat_service.dart';
 import 'user_service.dart';
 
@@ -45,5 +46,15 @@ Future<UserDetails?> usernameById(UsernameByIdRef ref, String userId) async {
 Future<String> createGroupChat(CreateGroupChatRef ref, String groupName, List<String> participantIds, String currentUserId) async {
   return ref.watch(chatServiceProvider).createGroupChat(groupName, participantIds, currentUserId);
 }
+@riverpod
+Future<Chat> chatById(ChatByIdRef ref, String chatId) async {
+  final supabase = Supabase.instance.client;
+  final res = await supabase
+      .from('chats')
+      .select()
+      .eq('id', chatId)
+      .single();
 
+  return Chat.fromJson(res);
+}
 

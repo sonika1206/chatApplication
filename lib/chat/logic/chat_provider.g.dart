@@ -593,5 +593,119 @@ class _CreateGroupChatProviderElement
   String get currentUserId => (origin as CreateGroupChatProvider).currentUserId;
 }
 
+String _$chatByIdHash() => r'cac2438ca404117db2a2031827a9014dc38f3cb3';
+
+/// See also [chatById].
+@ProviderFor(chatById)
+const chatByIdProvider = ChatByIdFamily();
+
+/// See also [chatById].
+class ChatByIdFamily extends Family<AsyncValue<Chat>> {
+  /// See also [chatById].
+  const ChatByIdFamily();
+
+  /// See also [chatById].
+  ChatByIdProvider call(String chatId) {
+    return ChatByIdProvider(chatId);
+  }
+
+  @override
+  ChatByIdProvider getProviderOverride(covariant ChatByIdProvider provider) {
+    return call(provider.chatId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'chatByIdProvider';
+}
+
+/// See also [chatById].
+class ChatByIdProvider extends AutoDisposeFutureProvider<Chat> {
+  /// See also [chatById].
+  ChatByIdProvider(String chatId)
+    : this._internal(
+        (ref) => chatById(ref as ChatByIdRef, chatId),
+        from: chatByIdProvider,
+        name: r'chatByIdProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$chatByIdHash,
+        dependencies: ChatByIdFamily._dependencies,
+        allTransitiveDependencies: ChatByIdFamily._allTransitiveDependencies,
+        chatId: chatId,
+      );
+
+  ChatByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.chatId,
+  }) : super.internal();
+
+  final String chatId;
+
+  @override
+  Override overrideWith(FutureOr<Chat> Function(ChatByIdRef provider) create) {
+    return ProviderOverride(
+      origin: this,
+      override: ChatByIdProvider._internal(
+        (ref) => create(ref as ChatByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        chatId: chatId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Chat> createElement() {
+    return _ChatByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChatByIdProvider && other.chatId == chatId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, chatId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin ChatByIdRef on AutoDisposeFutureProviderRef<Chat> {
+  /// The parameter `chatId` of this provider.
+  String get chatId;
+}
+
+class _ChatByIdProviderElement extends AutoDisposeFutureProviderElement<Chat>
+    with ChatByIdRef {
+  _ChatByIdProviderElement(super.provider);
+
+  @override
+  String get chatId => (origin as ChatByIdProvider).chatId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

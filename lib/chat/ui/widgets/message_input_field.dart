@@ -50,6 +50,7 @@ class _MessageInputFieldState extends ConsumerState<MessageInputField> {
       padding: const EdgeInsets.only(bottom: 20, left: 10),
       child: Row(
         children: [
+          
           Expanded(
             child: TextField(
               controller: _controller,

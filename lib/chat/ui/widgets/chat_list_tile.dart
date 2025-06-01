@@ -24,7 +24,7 @@ class ChatListTile extends ConsumerWidget {
         ),
         title: Text(chat.name ?? 'Group Chat'),
         subtitle: Text(chat.lastMessage?.content ?? 'No messages'),
-        onTap: () => context.go('/chat/${chat.id}'),
+        onTap: () => context.go('/chat/${chat.id}', extra: chat),
       );
     }
 

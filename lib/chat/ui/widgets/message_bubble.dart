@@ -17,6 +17,8 @@ class MessageBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final usernameAsync = ref.watch(usernameByIdProvider(message.senderId!));
     final chat = ref.watch(userChatsProvider(ref.watch(currentUserProvider).value?.id ?? '')).value
         ?.firstWhere((chat) => chat.id == message.chatId, orElse: () => Chat(id: null, chatType: null));
     final participantIds = chat?.participantIds ?? [];
@@ -40,6 +42,24 @@ class MessageBubble extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                usernameAsync.when(
+              data: (userDetails) => Text(
+                userDetails?.username ?? "Unknown User",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: isMe ? Colors.white70 : Colors.black54,
+                ),
+              ),
+              loading: () => const Text(
+                'Loading...',
+                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+              ),
+              error: (e, _) => Text(
+                'Error: $e',
+                style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+              ),
+            ),
                 Text(
                   message.content ?? '',
                   style: const TextStyle(fontSize: 16),
