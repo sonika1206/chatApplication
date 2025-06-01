@@ -15,15 +15,10 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title),
+      title: Text(title, style: TextStyle(color: Colors.black),),
       flexibleSpace: Container(
         decoration: const BoxDecoration(
-          color: Colors.blue,
-          // gradient: LinearGradient(
-          //   colors: [Colors.blueAccent, Colors.indigo, Colors.purpleAccent],
-          //   begin: Alignment.topCenter,
-          //   end: Alignment.bottomCenter,
-          // ),
+          color: Color.fromARGB(255, 162, 215, 233),
         ),
       ),
       actions: actions,

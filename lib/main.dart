@@ -1,7 +1,9 @@
+import 'package:chat2/chat/logic/theme_provider.dart';
 import 'package:chat2/routing/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
@@ -16,25 +18,46 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeNotifierProvider);
     final router = ref.watch(routerProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      themeMode: themeMode, 
       theme: ThemeData(
-        primaryColor:Colors.blue,
-        scaffoldBackgroundColor:Colors.white,
+        primaryColor:  Color.fromARGB(255, 162, 215, 233),
+        scaffoldBackgroundColor: Colors.white,
         colorScheme: const ColorScheme.light(
-         primary: Colors.blue,
-          secondary: Color(0xFFFF6584),
+          primary:  Color.fromARGB(255, 162, 215, 233),
+          secondaryContainer: Colors.grey,
         ),
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: Color(0xFF333333)),
+          bodySmall: TextStyle(color:Colors.black)
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor:Colors.blue,
+          selectedItemColor:  Color.fromARGB(255, 162, 215, 233),
           unselectedItemColor: Color(0xFF333333),
         ),
       ),
-     routerConfig: router,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor:  Color.fromARGB(255, 162, 215, 233),
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        colorScheme: const ColorScheme.dark(
+          primary:  Color.fromARGB(255, 162, 215, 233),
+          secondary: Colors.grey,
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Colors.white),
+          bodySmall:TextStyle(color: Color.fromARGB(255, 61, 63, 65)),
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          selectedItemColor:  Color.fromARGB(255, 162, 215, 233),
+          unselectedItemColor: Colors.white70,
+        ),
+      ),
+      routerConfig: router,
     );
   }
 }

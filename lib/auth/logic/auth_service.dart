@@ -46,6 +46,7 @@ class AuthService {
         return AppUser(
           id: response.user!.id,
           email: email,
+          username: userData?["username"],
         );
       }
 
@@ -70,9 +71,40 @@ class AuthService {
     }
   }
 
-  AppUser? getCurrentUser() {
-    final user = supabase.auth.currentUser;
-    if (user == null) return null;
-    return AppUser(id: user.id, email: user.email ?? '');
-  }
+  // AppUser? getCurrentUser() {
+  //   final user = supabase.auth.currentUser;
+  //   if (user == null) return null;
+  //   return AppUser(id: user.id, email: user.email ?? '');
+  // }
+
+// AppUser? getCurrentUser() {
+//   final user = supabase.auth.currentUser;
+//   if (user == null) return null;
+//   return AppUser(
+//     id: user.id,
+//     email: user.email ?? '',
+//     // bio not fetched here — we fetch it in signIn, or consider using `fromJson` with Supabase row
+//   );
+// }
+
+Future<AppUser?> getCurrentUser() async {
+  final user = supabase.auth.currentUser;
+  if (user == null) return null;
+
+  final userData = await supabase
+      .from('users')
+      .select()
+      .eq('id', user.id)
+      .maybeSingle();
+
+  if (userData == null) return null;
+
+  return AppUser(
+    id: user.id,
+    email: userData['email'] ?? user.email ?? '',
+    username: userData['username'],
+    profilePhotoUrl: userData['profile_photo_url'],
+  );
+}
+
 }

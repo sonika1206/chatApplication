@@ -36,7 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text('Error: Please verify your Credintials'),
           backgroundColor: Colors.redAccent,
         ),
       );

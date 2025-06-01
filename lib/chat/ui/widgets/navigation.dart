@@ -33,8 +33,9 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
+        //selectedItemColor:  Color.fromARGB(255, 162, 215, 233),
+        selectedItemColor:  Color.fromARGB(255, 107, 201, 233),
+        unselectedItemColor: Colors.blueGrey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
@@ -42,7 +43,8 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
-            label: 'Add',
+            label: 'Users',
+          
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

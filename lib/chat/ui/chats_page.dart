@@ -31,7 +31,7 @@ class ChatsPage extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error signing out: $e'),
+                      content:ErrorMsg(message: "Error signing out!!"),
                       backgroundColor: Colors.redAccent,
                     ),
                   );
@@ -46,7 +46,7 @@ class ChatsPage extends ConsumerWidget {
             ? const Center(child: Text('Please log in'))
             : _buildChatList(context, ref, user.id),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorMsg(message: "'Error: $e'"),
+        error: (e, _) => ErrorMsg(message: "Got an unexpected error"),
       ),
     );
   }
@@ -65,7 +65,7 @@ class ChatsPage extends ConsumerWidget {
               },
             ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error loading chats: $e')),
+      error: (e, _) => ErrorMsg(message: "Error loading Chats!!"),
     );
   }
 

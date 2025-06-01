@@ -1,6 +1,6 @@
+import 'package:chat2/chat/model/user_details.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
-import '../model/user_details.dart';
 
 class UserService {
   final supabase = Supabase.instance.client;
@@ -42,28 +42,33 @@ class UserService {
   }
 
   Future<String?> uploadProfilePhoto(String userId, File photo) async {
-    try {
-      final fileName = '$userId-profile.jpg';
-      final response = await supabase.storage
-          .from('profile-photos')
-          .upload(
-            fileName,
-            photo,
-            fileOptions: const FileOptions(upsert: true),
-          );
-      print('Photo uploaded: $response');
-      final photoUrl = supabase.storage
-          .from('profile-photos')
-          .getPublicUrl(fileName);
-      await supabase
-          .from('users')
-          .update({'profile_photo_url': photoUrl})
-          .eq('id', userId);
-      print('Profile photo URL updated: $photoUrl');
-      return photoUrl;
-    } catch (e) {
-      print('Upload profile photo error: $e');
-      throw Exception('Failed to upload profile photo: $e');
-    }
+  try {
+    final fileName = '$userId-profile.jpg';
+
+    // Upload to Supabase Storage
+    final response = await supabase.storage
+        .from('profile-photos')
+        .upload(fileName, photo, fileOptions: const FileOptions(upsert: true));
+
+    print('Photo uploaded: $response');
+
+    // Get public URL
+    final photoUrl = supabase.storage
+        .from('profile-photos')
+        .getPublicUrl(fileName);
+
+    // Update user row
+    final updateRes = await supabase
+        .from('users')
+        .update({'profile_photo_url': photoUrl})
+        .eq('id', userId);
+
+    print('Profile photo URL updated: $photoUrl');
+    return photoUrl;
+  } catch (e) {
+    print('Upload profile photo error: $e');
+    throw Exception('Failed to upload profile photo: $e');
   }
+}
+
 }

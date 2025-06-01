@@ -9,76 +9,108 @@ class MessageBubble extends ConsumerWidget {
   final Message message;
   final bool isMe;
 
-  const MessageBubble({
-    Key? key,
-    required this.message,
-    required this.isMe,
-  }) : super(key: key);
+  const MessageBubble({Key? key, required this.message, required this.isMe})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    final theme = Theme.of(context);
     final usernameAsync = ref.watch(usernameByIdProvider(message.senderId!));
-    final chat = ref.watch(userChatsProvider(ref.watch(currentUserProvider).value?.id ?? '')).value
-        ?.firstWhere((chat) => chat.id == message.chatId, orElse: () => Chat(id: null, chatType: null));
-    final participantIds = chat?.participantIds ?? [];
+    final currentUserId = ref.watch(currentUserProvider).value?.id ?? '';
+    final chat = ref
+        .watch(userChatsProvider(currentUserId))
+        .value
+        ?.firstWhere(
+          (chat) => chat.id == message.chatId,
+          orElse: () => Chat(id: null, chatType: null),
+        );
 
-    final otherParticipants = participantIds.where((id) => id != message.senderId).toList();
-    final allRead = otherParticipants.isNotEmpty &&
+    final participantIds = chat?.participantIds ?? [];
+    final otherParticipants = participantIds
+        .where((id) => id != message.senderId)
+        .toList();
+
+    final allRead =
+        otherParticipants.isNotEmpty &&
         otherParticipants.every((id) => message.readBy.contains(id));
 
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.blue[100] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+    final bubbleColor = isMe
+        ? theme.colorScheme.primary
+        : Colors.grey.withOpacity(0.6);
+    final textColor = isMe
+        ? Colors.black
+        : theme.colorScheme.onSecondary;
+   
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Align(
+        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: isMe
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                usernameAsync.when(
-              data: (userDetails) => Text(
-                userDetails?.username ?? "Unknown User",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  color: isMe ? Colors.white70 : Colors.black54,
-                ),
-              ),
-              loading: () => const Text(
-                'Loading...',
-                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-              ),
-              error: (e, _) => Text(
-                'Error: $e',
-                style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-              ),
-            ),
-                Text(
-                  message.content ?? '',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                if (message.timestamp != null)
-                  Text(
-                    '${message.timestamp!.hour}:${message.timestamp!.minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+            if (!isMe)
+              usernameAsync.when(
+                data: (userDetails) => Padding(
+                  padding: const EdgeInsets.only(bottom: 2, left: 4),
+                  child: Text(
+                    userDetails?.username ?? "Unknown",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: theme.textTheme.bodySmall?.color?.withOpacity(0.6),
+                    ),
                   ),
-              ],
-            ),
-            if (isMe) ...[
-              const SizedBox(width: 5),
-              Icon(
-                allRead ? Icons.done_all : Icons.done,
-                size: 16,
-                color: allRead ? Colors.blue : Colors.grey,
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (e, _) => const Text("Error"),
               ),
-            ],
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+              decoration: BoxDecoration(
+                color: bubbleColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(12),
+                  topRight: const Radius.circular(12),
+                  bottomLeft: isMe
+                      ? const Radius.circular(12)
+                      : const Radius.circular(0),
+                  bottomRight: isMe
+                      ? const Radius.circular(0)
+                      : const Radius.circular(12),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: isMe
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    message.content ?? '',
+                    
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: textColor,
+                    ),
+                  ),
+                  // const SizedBox(height: 4),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${message.timestamp?.hour ?? 0}:${message.timestamp?.minute.toString().padLeft(2, '0') ?? '00'}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 12,
+                          //color: Colors.black,
+                        ),
+                      ),
+                     
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -37,7 +37,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           );
       context.go('/chats');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("error: Please enter valid credintials")));
     } finally {
       setState(() => _isLoading = false);
     }

@@ -55,18 +55,22 @@ class _ChatPageBodyState extends ConsumerState<ChatPageBody> {
               title: widget.chat.name ?? 'Group Chat',
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
+                color: Colors.black,
                 onPressed: () => context.go('/chats'),
               ),
             );
           }
 
-          // 1-to-1 Chat: get other participant
+          //1-to-1 Chat: get other participant
           final otherParticipantId = widget.chat.participantIds
                   ?.firstWhere((id) => id != user.id, orElse: () => '') ??
               '';
           print("chat page:${otherParticipantId?? null}");
           if (otherParticipantId.isEmpty) {
-            return const GradientAppBar(title: 'Invalid Chat');
+            
+            return  GradientAppBar(title: 'Chat',leading: IconButton(
+                  icon:  Icon(Icons.arrow_back),
+                  onPressed: () => context.go('/chats'),));
           }
 
           final userDetailsAsync =

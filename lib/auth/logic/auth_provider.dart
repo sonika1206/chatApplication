@@ -13,5 +13,5 @@ class AuthServiceProvider extends _$AuthServiceProvider {
 @riverpod
 Future<AppUser?> currentUser(CurrentUserRef ref) async {
   final authService = ref.watch(authServiceProviderProvider);
-  return authService.getCurrentUser();
+  return await authService.getCurrentUser();
 }

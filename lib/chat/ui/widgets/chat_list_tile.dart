@@ -8,34 +8,41 @@ class ChatListTile extends ConsumerWidget {
   final Chat chat;
   final String userId;
 
-  const ChatListTile({
-    Key? key,
-    required this.chat,
-    required this.userId,
-  }) : super(key: key);
+  const ChatListTile({Key? key, required this.chat, required this.userId})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (chat.chatType == 'group') {
-      print('Group chat name: ${chat.name}');
+      //print('Group chat name: ${chat.name}');
       return ListTile(
         leading: CircleAvatar(
-          child: chat.name != null ? Text(chat.name![0]) : const Icon(Icons.group),
+          child: chat.name != null
+              ? Text(chat.name![0])
+              : const Icon(Icons.group),
         ),
-        title: Text(chat.name ?? 'Group Chat'),
+        title: Text(
+          chat.name ?? 'Group Chat',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         subtitle: Text(chat.lastMessage?.content ?? 'No messages'),
         onTap: () => context.go('/chat/${chat.id}', extra: chat),
       );
     }
 
-    final otherParticipantId = chat.participantIds?.firstWhere(
+    final otherParticipantId =
+        chat.participantIds?.firstWhere(
           (id) => id != userId,
           orElse: () => '',
-        ) ?? '';
-
-    final userDetailsAsync = ref.watch(usernameByIdProvider(otherParticipantId));
+        ) ??
+        '';
+    print("otherparticipants id is ${otherParticipantId}");
+    final userDetailsAsync = ref.watch(
+      usernameByIdProvider(otherParticipantId),
+    );
     return userDetailsAsync.when(
       data: (details) {
+        print("username is:${details?.username ?? null}");
         final username = details?.username ?? 'User $otherParticipantId';
         return ListTile(
           leading: CircleAvatar(
@@ -46,9 +53,9 @@ class ChatListTile extends ConsumerWidget {
                 ? const Icon(Icons.person)
                 : null,
           ),
-          title: Text(username),
+          title: Text(username, style: TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Text(chat.lastMessage?.content ?? 'No messages'),
-          onTap: () => context.go('/chat/${chat.id}'),
+          onTap: () => context.go('/chat/${chat.id}', extra: chat),
         );
       },
       loading: () => const ListTile(title: Text('Loading...')),

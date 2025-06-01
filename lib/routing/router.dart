@@ -3,6 +3,7 @@ import 'package:chat2/auth/ui/login_page.dart';
 import 'package:chat2/auth/ui/signup_page.dart';
 import 'package:chat2/chat/model/chat_model.dart';
 import 'package:chat2/chat/ui/chat_page.dart';
+import 'package:chat2/chat/ui/widgets/chat_page_body.dart';
 import 'package:chat2/chat/ui/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,10 +41,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/chat',
             builder: (context, state) => const NavigationPage(),
           ),
+          // GoRoute(
+          //   path: '/chat/:chatId',
+          //   builder: (context, state) => ChatPage(chatId: state.pathParameters['chatId']!),
+          // ),
           GoRoute(
-            path: '/chat/:chatId',
-            builder: (context, state) => ChatPage(chatId: state.pathParameters['chatId']!),
-          ),
+  path: '/chat/:chatId',
+  builder: (context, state) {
+    final chat = state.extra as Chat;
+    final chatId = state.pathParameters['chatId']!;
+    return ChatPageBody(chat: chat, chatId: chatId);
+  },
+),
+
         ],
       ),
     ],
